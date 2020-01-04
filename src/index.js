@@ -4,20 +4,20 @@ module.exports = class AhoCorasik {
     this._breadthFirstTraversal = {};
 
     patterns.forEach((pattern, patternIndex) => {
-      let currentNodePointer = this.root;
+      let currentNodePtr = this.root;
       let depth = 0;
 
       this._breadthFirstTraversal.first = 1;
 
       Array.from(pattern).forEach((charOfPattern) => {
-        const nodeExists = currentNodePointer.child.has(charOfPattern);
+        const nodeExists = currentNodePtr.child.has(charOfPattern);
         depth++;
         if (nodeExists) {
-          currentNodePointer = currentNodePointer.child.get(charOfPattern);
+          currentNodePtr = currentNodePtr.child.get(charOfPattern);
         } else {
           const createdNode = this._createNode();
-          currentNodePointer.child.set(charOfPattern, createdNode);
-          currentNodePointer = createdNode;
+          currentNodePtr.child.set(charOfPattern, createdNode);
+          currentNodePtr = createdNode;
           createdNode.depth = depth;
           if (depth >= 0) {
             if (!this._breadthFirstTraversal[depth]) {
@@ -29,7 +29,7 @@ module.exports = class AhoCorasik {
         }
       });
 
-      currentNodePointer.patternIndex.push(patternIndex);
+      currentNodePtr.patternIndex.push(patternIndex);
     });
 
     this._buildSuffixAndOutputLinks();
@@ -66,64 +66,64 @@ module.exports = class AhoCorasik {
     ) {
       const level = this._breadthFirstTraversal[levelIter];
 
-      for (const currentNodePointer of level) {
-        for (const entry of currentNodePointer.child.entries()) {
+      for (const currentNodePtr of level) {
+        for (const entry of currentNodePtr.child.entries()) {
           const [charKey, trieNode] = entry;
-          let tmpNodePointer = currentNodePointer.suffixLink;
+          let tmpNodePtr = currentNodePtr.suffixLink;
 
           while (
-            !tmpNodePointer.child.has(charKey) &&
-            !tmpNodePointer.isRoot
+            !tmpNodePtr.child.has(charKey) &&
+            !tmpNodePtr.isRoot
           ) {
-            tmpNodePointer = tmpNodePointer.suffixLink;
+            tmpNodePtr = tmpNodePtr.suffixLink;
           }
 
-          if (tmpNodePointer.child.has(charKey)) {
-            trieNode.suffixLink = tmpNodePointer.child.get(charKey);
+          if (tmpNodePtr.child.has(charKey)) {
+            trieNode.suffixLink = tmpNodePtr.child.get(charKey);
           } else {
             trieNode.suffixLink = this.root;
           }
         }
 
-        if (currentNodePointer.suffixLink.patternIndex.length) {
-          currentNodePointer.outputLink = currentNodePointer.suffixLink;
+        if (currentNodePtr.suffixLink.patternIndex.length) {
+          currentNodePtr.outputLink = currentNodePtr.suffixLink;
         } else {
-          currentNodePointer.outputLink =
-            currentNodePointer.suffixLink.outputLink;
+          currentNodePtr.outputLink =
+            currentNodePtr.suffixLink.outputLink;
         }
       }
     }
   }
 
   search(text, onMatch) {
-    let parentPointer = this.root;
+    let parentPtr = this.root;
 
     for (let textIter = 0; textIter < text.length; textIter++) {
       const char = text.charAt(textIter);
 
-      if (parentPointer.child.has(char)) {
+      if (parentPtr.child.has(char)) {
         // if link to char exists then follow the link
-        parentPointer = parentPointer.child.get(char);
+        parentPtr = parentPtr.child.get(char);
 
-        if (parentPointer.patternIndex.length) {
-          // if this node is marked then a pattern ends here
-          onMatch(parentPointer.patternIndex, textIter);
+        if (parentPtr.patternIndex.length) {
+          // patterns ends here
+          onMatch(parentPtr.patternIndex, textIter);
         }
 
-        let tempPointer = parentPointer.outputLink;
+        let tempPtr = parentPtr.outputLink;
 
-        while (tempPointer) {
+        while (tempPtr) {
           // follow all output links to get patterns ending here
-          onMatch(tempPointer.patternIndex, textIter);
-          tempPointer = tempPointer.outputLink;
+          onMatch(tempPtr.patternIndex, textIter);
+          tempPtr = tempPtr.outputLink;
         }
       } else {
-        while (!parentPointer.isRoot && !parentPointer.child.has(char)) {
+        while (!parentPtr.isRoot && !parentPtr.child.has(char)) {
           // follow suffix link till matching suffix or root is found
-          parentPointer = parentPointer.suffixLink;
+          parentPtr = parentPtr.suffixLink;
         }
 
-        if (parentPointer.child.has(char)) {
+        if (parentPtr.child.has(char)) {
           textIter--;
         }
       }
