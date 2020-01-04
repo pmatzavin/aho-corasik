@@ -1,35 +1,34 @@
 module.exports = class AhoCorasik {
   constructor(patterns) {
     this.root = this._createNodeRoot();
-    this._breadthFirstTraversal = {};
+    this._breadthFirstTraversal = [this.root];
 
-    patterns.forEach((pattern, patternIndex) => {
+    patterns.forEach((pattern, patternIter) => {
       let currentNodePtr = this.root;
       let depth = 0;
 
-      this._breadthFirstTraversal.first = 1;
-
       Array.from(pattern).forEach((charOfPattern) => {
-        const nodeExists = currentNodePtr.child.has(charOfPattern);
         depth++;
-        if (nodeExists) {
-          currentNodePtr = currentNodePtr.child.get(charOfPattern);
+
+        const childForChar = currentNodePtr.child.get(charOfPattern);
+
+        if (childForChar) {
+          currentNodePtr = childForChar;
         } else {
           const createdNode = this._createNode();
+
           currentNodePtr.child.set(charOfPattern, createdNode);
           currentNodePtr = createdNode;
-          createdNode.depth = depth;
-          if (depth >= 0) {
-            if (!this._breadthFirstTraversal[depth]) {
-              this._breadthFirstTraversal[depth] = [];
-              this._breadthFirstTraversal.last = depth;
-            }
-            this._breadthFirstTraversal[depth].push(createdNode);
+
+          if (this._breadthFirstTraversal.length < (depth + 1)) {
+            this._breadthFirstTraversal.push([]);
           }
+
+          this._breadthFirstTraversal[depth].push(createdNode);
         }
       });
 
-      currentNodePtr.patternIndex.push(patternIndex);
+      currentNodePtr.patternIndex.push(patternIter);
     });
 
     this._buildSuffixAndOutputLinks();
@@ -53,44 +52,27 @@ module.exports = class AhoCorasik {
   _buildSuffixAndOutputLinks() {
     this.root.suffixLink = this.root;
 
-    for (const entry of this.root.child.entries()) {
-      const nodeAttachedToRoot = entry[1];
-
-      nodeAttachedToRoot.suffixLink = this.root;
+    for (const [ _, child]  of this.root.child.entries()) {
+      child.suffixLink = this.root;
     };
 
-    for (
-      let levelIter = this._breadthFirstTraversal.first;
-      levelIter <= this._breadthFirstTraversal.last;
-      levelIter++
-    ) {
-      const level = this._breadthFirstTraversal[levelIter];
+    for (const level of this._breadthFirstTraversal.slice(1)) {
+      for (const currentNode of level) {
+        for (const [ char, childNode ] of currentNode.child.entries()) {
+          let nodePtr = currentNode.suffixLink;
+          let childForChar = nodePtr.child.get(char);
 
-      for (const currentNodePtr of level) {
-        for (const entry of currentNodePtr.child.entries()) {
-          const [charKey, trieNode] = entry;
-          let tmpNodePtr = currentNodePtr.suffixLink;
-
-          while (
-            !tmpNodePtr.child.has(charKey) &&
-            !tmpNodePtr.isRoot
-          ) {
-            tmpNodePtr = tmpNodePtr.suffixLink;
+          while (childForChar === undefined && !nodePtr.isRoot) {
+            nodePtr = nodePtr.suffixLink;
+            childForChar = nodePtr.child.get(char);
           }
 
-          if (tmpNodePtr.child.has(charKey)) {
-            trieNode.suffixLink = tmpNodePtr.child.get(charKey);
-          } else {
-            trieNode.suffixLink = this.root;
-          }
+          childNode.suffixLink = childForChar ? childForChar : this.root;
         }
 
-        if (currentNodePtr.suffixLink.patternIndex.length) {
-          currentNodePtr.outputLink = currentNodePtr.suffixLink;
-        } else {
-          currentNodePtr.outputLink =
-            currentNodePtr.suffixLink.outputLink;
-        }
+        currentNode.outputLink = !currentNode.suffixLink.patternIndex.length ?
+          currentNode.suffixLink.outputLink :
+          currentNode.suffixLink;
       }
     }
   }
@@ -101,12 +83,12 @@ module.exports = class AhoCorasik {
     for (let textIter = 0; textIter < text.length; textIter++) {
       const char = text.charAt(textIter);
 
-      if (parentPtr.child.has(char)) {
-        // if link to char exists then follow the link
-        parentPtr = parentPtr.child.get(char);
+      const child = parentPtr.child.get(char);
+
+      if (child !== undefined) {
+        parentPtr = child;
 
         if (parentPtr.patternIndex.length) {
-          // patterns ends here
           onMatch(parentPtr.patternIndex, textIter);
         }
 
@@ -118,12 +100,15 @@ module.exports = class AhoCorasik {
           tempPtr = tempPtr.outputLink;
         }
       } else {
-        while (!parentPtr.isRoot && !parentPtr.child.has(char)) {
+        let hasChild = false;
+
+        while (!parentPtr.isRoot && !hasChild) {
           // follow suffix link till matching suffix or root is found
           parentPtr = parentPtr.suffixLink;
+          hasChild = parentPtr.child.has(char);
         }
 
-        if (parentPtr.child.has(char)) {
+        if (hasChild) {
           textIter--;
         }
       }
