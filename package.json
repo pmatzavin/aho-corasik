@@ -1,0 +1,23 @@
+{
+  "name": "aho-corassik",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bench.js",
+  "dependencies": {},
+  "devDependencies": {
+    "tap": "^14.10.5"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pmatzavin/aho-corasik.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pmatzavin/aho-corasik/issues"
+  },
+  "homepage": "https://github.com/pmatzavin/aho-corasik#readme"
+}
