@@ -52,3 +52,15 @@ Which mean that:
 - The patterns[2]="c" exists in the text="bccb" and ends at the text position 2.
 - Note that the positions are zero based.
 
+# tests
+
+run tests:
+```
+npm test
+```
+This will run all the tests in the `test` folder.
+
+The `test/spec.js` contain test cases from the cloudflare implementation: https://github.com/cloudflare/ahocorasick/blob/master/ahocorasick_test.go
+
+The `test/hacker-rank.js` contain test cases of the `determining-dna-health` Hacker-Rank challenge: https://www.hackerrank.com/challenges/determining-dna-health/problem
+
