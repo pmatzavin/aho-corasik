@@ -47,8 +47,8 @@ Will print:
 [ 4 ] 2
 ```
 Which mean that:
-The patterns[2]="bc" exists in the text="bccb" and ends at the text position 1.
-The patterns[4]="c" exists in the text="bccb" and ends at the text position 1.
-The patterns[2]="c" exists in the text="bccb" and ends at the text position 2.
-Note that the positions are zzero based.
+- The patterns[2]="bc" exists in the text="bccb" and ends at the text position 1.
+- The patterns[4]="c" exists in the text="bccb" and ends at the text position 1.
+- The patterns[2]="c" exists in the text="bccb" and ends at the text position 2.
+- Note that the positions are zero based.
 
