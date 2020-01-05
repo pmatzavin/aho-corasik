@@ -1,4 +1,4 @@
-const AhoCorasik = require('../src/index');
+const AhoCorasick = require('../src/index');
 const tap = require('tap');
 const fs = require('fs');
 
@@ -60,7 +60,7 @@ function main() {
 
   const { genes: patterns, health, strandsLength } = readGenes();
 
-  const searcher = new AhoCorasik(patterns);
+  const searcher = new AhoCorasick(patterns);
   const minMax = new MinMax();
 
   for (let strandIter = 0; strandIter < strandsLength; strandIter++) {

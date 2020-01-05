@@ -36,10 +36,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 const tap = require('tap');
 tap.pass('tap should work');
 
-const AhoCorasik = require('../src/index');
+const AhoCorasick = require('../src/index');
 
 (function testNoPatterns() {
-    const searcher = new AhoCorasik([]);
+    const searcher = new AhoCorasick([]);
     const hits = [];
     searcher.search("foo bar baz", (h) => {
         hits.push(h);
@@ -48,14 +48,14 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testNoData() {
-    const searcher = new AhoCorasik(["foo", "baz", "bar"]);
+    const searcher = new AhoCorasick(["foo", "baz", "bar"]);
     hits = [];
 	searcher.search("");
 	tap.equal(hits.length, 0);
 })();
 
 (function testSuffixes() {
-    const searcher = new AhoCorasik(["Superman", "uperman", "perman", "erman"]);
+    const searcher = new AhoCorasick(["Superman", "uperman", "perman", "erman"]);
     const hits = [];
     searcher.search("The Man Of Steel: Superman", (patternPosition, textPosition) => {
         hits.push([patternPosition[0], textPosition]);
@@ -72,7 +72,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testPrefixes() {
-    const searcher = new AhoCorasik(["Superman", "Superma", "Superm", "Super"]);
+    const searcher = new AhoCorasick(["Superman", "Superma", "Superm", "Super"]);
     const hits = [];
     searcher.search("The Man Of Steel: Superman", (patternPosition, textPosition) => {
         hits.push([patternPosition[0], textPosition]);
@@ -89,7 +89,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testInterior() {
-    const searcher = new AhoCorasik(["Steel", "tee", "e"]);
+    const searcher = new AhoCorasick(["Steel", "tee", "e"]);
     const hits = [];
     searcher.search("The Man Of Steel: Superman", (patternPosition, textPosition) => {
         hits.push([patternPosition[0], textPosition]);
@@ -110,7 +110,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testMatchAtStart() {
-    const searcher = new AhoCorasik(["The", "Th", "he"]);
+    const searcher = new AhoCorasick(["The", "Th", "he"]);
     const hits = [];
     searcher.search("The Man Of Steel: Superman", (patternPosition, textPosition) => {
         hits.push([patternPosition[0], textPosition]);
@@ -125,7 +125,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testMatchAtEnd() {
-    const searcher = new AhoCorasik(["teel", "eel", "el"]);
+    const searcher = new AhoCorasick(["teel", "eel", "el"]);
     const hits = [];
     searcher.search("The Man Of Steel", (patternPosition, textPosition) => {
         hits.push([patternPosition[0], textPosition]);
@@ -140,7 +140,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testOverlappingPatterns() {
-    const searcher = new AhoCorasik(["Man ", "n Of", "Of S"]);
+    const searcher = new AhoCorasick(["Man ", "n Of", "Of S"]);
     const hits = [];
     searcher.search("The Man Of Steels", (patternPosition, textPosition) => {
         hits.push([patternPosition[0], textPosition]);
@@ -155,7 +155,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testMultipleMatches() {
-    const searcher = new AhoCorasik(["The", "Man", "an"]);
+    const searcher = new AhoCorasick(["The", "Man", "an"]);
     const hits = [];
     searcher.search("A Man A Plan A Canal: Panama, which Man Planned The Canal",
             (patternPosition, textPosition) => {
@@ -185,7 +185,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testSingleCharacterMatches() {
-    const searcher = new AhoCorasik(["a", "M", "z"]);
+    const searcher = new AhoCorasick(["a", "M", "z"]);
     const hits = [];
     searcher.search("A Man A Plan A Canal: Panama, which Man Planned The Canal",
             (patternPosition, textPosition) => {
@@ -199,7 +199,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testNothingMatches() {
-    const searcher = new AhoCorasik(["baz", "bar", "foo"]);
+    const searcher = new AhoCorasick(["baz", "bar", "foo"]);
     const hits = [];
     searcher.search("A Man A Plan A Canal: Panama, which Man Planned The Canal",
             (patternPosition, textPosition) => {
@@ -209,7 +209,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testWikipedia() {
-    const searcher = new AhoCorasik(["a", "ab", "bc", "bca", "c", "caa"]);
+    const searcher = new AhoCorasick(["a", "ab", "bc", "bca", "c", "caa"]);
     let hits = [];
     searcher.search("abccab", (patternPosition, textPosition) => {
         hits.push([patternPosition[0], textPosition]);
@@ -239,7 +239,7 @@ const AhoCorasik = require('../src/index');
 })();
 
 (function testMatch() {
-    const searcher = new AhoCorasik(["Mozilla", "Mac", "Macintosh", "Safari", "Sausage"]);
+    const searcher = new AhoCorasick(["Mozilla", "Mac", "Macintosh", "Safari", "Sausage"]);
     let hits = [];
     searcher.search(
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36",

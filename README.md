@@ -9,7 +9,7 @@ const patterns = ["a", "ab", "bc", "bca", "c", "caa"];
 ```
 We can construct the Aho–Corasick data structure, corresponding to the given patterns:
 ```
-const searcher = new AhoCorasik(patterns)
+const searcher = new AhoCorasick(patterns)
 ```
 Then given a text:
 ```
@@ -32,9 +32,9 @@ searcher.search(text, (patternIndex, textIndex) => {
 
 So the following snippet:
 ```
-const AhoCorasik = require('./src/AhoCorasik');
+const AhoCorasick = require('./src/AhoCorasick');
 const patterns = ["a", "ab", "bc", "bca", "c", "caa"];
-const searcher = new AhoCorasik(patterns)
+const searcher = new AhoCorasick(patterns)
 const text = "bccb";
 searcher.search(text, (patternIndex, textIndex) => {
   console.log(patternIndex, textIndex);

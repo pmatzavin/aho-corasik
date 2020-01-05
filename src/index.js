@@ -1,4 +1,4 @@
-module.exports = class AhoCorasik {
+module.exports = class AhoCorasick {
   constructor(patterns) {
     this.root = this._createNodeRoot();
     this._breadthFirstTraversal = [this.root];
