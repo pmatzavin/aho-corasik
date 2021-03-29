@@ -1,6 +1,7 @@
 # Description
 
-This is a nodejs implementation of the Aho–Corasick data structure and search algorithm.
+This is a Nodejs implementation of the Aho–Corasick data structure and search algorithm.
+The Aho-Corasic is a string searching algorithm: https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm
 
 # Usage
 Given a list of patterns:
