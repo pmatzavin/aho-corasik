@@ -52,7 +52,7 @@ Which mean that:
 - The patterns[4]="c" exists in the text="bccb" and ends at the text position 1.
 - The patterns[4]="c" exists in the text="bccb" and ends at the text position 2.
 - Note that the positions are zero based.
-- Note that only the end position of the pattern is retrned as the start position can be infered from the endposition and the pattern length.
+- Note that only the end position of the pattern is returned, as the start position can be infered from the end position and the pattern length.
 
 # tests
 
